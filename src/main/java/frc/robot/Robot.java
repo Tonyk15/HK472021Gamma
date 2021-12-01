@@ -54,8 +54,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     m_myRobot.arcadeDrive(
-      xbox0.getY(GenericHID.Hand.kRight),
-      xbox0.getX(GenericHID.Hand.kRight)
+      -xbox0.getY(GenericHID.Hand.kLeft),
+      xbox0.getX(GenericHID.Hand.kLeft)
     );
   }
 }
