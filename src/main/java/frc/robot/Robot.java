@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID;
 
+
 /**
  * This is a demo program showing the use of the RobotDrive class, specifically it contains the code
  * necessary to operate a robot with tank drive.
@@ -32,9 +33,13 @@ public class Robot extends TimedRobot {
   private SpeedControllerGroup m_right;
   private SpeedControllerGroup m_left;
 
+  private double triggerSpeed;
+  private double SPEEDSCALING; 
+  private double TURNSCALING;
+
   @Override
   public void robotInit() {
-    
+
     m_rearLeft = new CANSparkMax(15, MotorType.kBrushless); 
     m_frontLeft = new CANSparkMax(13, MotorType.kBrushless);
     m_rearRight = new CANSparkMax(14, MotorType.kBrushless);
@@ -48,14 +53,26 @@ public class Robot extends TimedRobot {
     // m_leftStick = new Joystick(0);
     // m_rightStick = new Joystick(1);
     xbox0 = new XboxController(0);
+
+    SPEEDSCALING = 0.9;
+    TURNSCALING = 0.5;
     
+    triggerSpeed = 0.0;
   }
 
   @Override
   public void teleopPeriodic() {
+
+    // sets left trigger as forward and right trigger as backward
+    if (xbox0.getTriggerAxis(GenericHID.Hand.kRight) > 0) {
+      triggerSpeed = -xbox0.getTriggerAxis(GenericHID.Hand.kRight);
+    } else if (xbox0.getTriggerAxis(GenericHID.Hand.kLeft) > 0) {
+      triggerSpeed = xbox0.getTriggerAxis(GenericHID.Hand.kLeft);
+    }
+    
     m_myRobot.arcadeDrive(
-      -xbox0.getY(GenericHID.Hand.kLeft),
-      xbox0.getX(GenericHID.Hand.kLeft)
+      triggerSpeed * SPEEDSCALING,
+      xbox0.getX(GenericHID.Hand.kLeft) * TURNSCALING
     );
   }
 }
